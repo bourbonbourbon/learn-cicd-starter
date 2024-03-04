@@ -32,8 +32,6 @@ func TestGetAPIKey(t *testing.T) {
 			if dif != "" {
 				t.Fatalf(dif)
 			}
-
 		})
-
 	}
 }
