@@ -31,3 +31,6 @@ jobs:
 
       - name: GAR Docker Build & Push
         run:  gcloud builds submit --tag ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_APPNAME }}/${{ vars.GCP_GARREPO }}/${{ vars.GCP_GAR_IMAGE_NAME }}:latest .
+
+      - name: Deploy to Cloud Run
+        run: gcloud run deploy notely --image ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_APPNAME }}/${{ vars.GCP_GARREPO }}/${{ vars.GCP_GAR_IMAGE_NAME }}:latest --region ${{ vars.GCP_REGION }} --allow-unauthenticated --project ${{ vars.GCP_APPNAME }} --max-instances=4
