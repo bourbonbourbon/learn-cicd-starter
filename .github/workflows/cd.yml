@@ -9,6 +9,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -21,16 +24,22 @@ jobs:
       - name: Build app
         run: ./scripts/buildprod.sh
 
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
+      - id: auth
+        uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Setup gcloud
-        uses: 'google-github-actions/setup-gcloud@v2'
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: GAR Docker Build & Push
-        run:  gcloud builds submit --tag ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_APPNAME }}/${{ vars.GCP_GARREPO }}/${{ vars.GCP_GAR_IMAGE_NAME }}:latest .
+        run: gcloud builds submit --tag ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_APPNAME }}/${{ vars.GCP_GARREPO }}/${{ vars.GCP_GAR_IMAGE_NAME }}:latest .
+
+      - name: Setup goose
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
+
+      - name: Run DB Deployment
+        run: ./scripts/migrateup.sh
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely --image ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_APPNAME }}/${{ vars.GCP_GARREPO }}/${{ vars.GCP_GAR_IMAGE_NAME }}:latest --region ${{ vars.GCP_REGION }} --allow-unauthenticated --project ${{ vars.GCP_APPNAME }} --max-instances=4
