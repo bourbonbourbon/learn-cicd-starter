@@ -20,3 +20,9 @@ jobs:
 
       - name: Build app
         run: ./scripts/buildprod.sh
+
+      - name: Setup gcloud
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: GAR Docker Build & Push
+        run:  gcloud builds submit --tag ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_APPNAME }}/${{ vars.GCP_GARREPO }}/${{ vars.GCP_GAR_IMAGE_NAME }}:latest .
