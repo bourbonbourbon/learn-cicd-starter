@@ -2,7 +2,7 @@ on:
   push:
     branches: [main]
 
-job:
+jobs:
   Deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -18,5 +18,3 @@ job:
 
       - name: Build app
         run: ./scripts/buildprod.sh
-
-      
