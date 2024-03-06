@@ -49,7 +49,6 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		// parsedURL := dbURL
 		db, err := sql.Open("mysql", parsedURL)
 		if err != nil {
 			log.Fatal(err)
