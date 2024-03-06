@@ -4,6 +4,15 @@
 
 This repo contains the starter code for the "Notely" application for the "Learn CICD" course on [Boot.dev](https://boot.dev).
 
+## PlanetScale unavailable in country workaround
+1. Create a Cloud SQL instance, name it whatever.
+2. Create a database in that instance called notely-db.
+3. `DATABASE_URL` format will be `USER:PASSWORD@tcp(IP)/DATABASE_NAME`.
+4. Run `migrateup.sh`.
+5. Add `DATABASE_URL` to Github Secrets and Secrets Manager on GCP.
+
+> Note: Check out [env.md](./env.md) for more information.
+
 ## Local Development
 
 Make sure you're on Go version 1.20+.
@@ -20,6 +29,6 @@ Run the server:
 go build -o notely && ./notely
 ```
 
-*This starts the server in non-database mode.* It will serve a simple webpage at `http://localhost:8080`.
+_This starts the server in non-database mode._ It will serve a simple webpage at `http://localhost:8080`.
 
-You do *not* need to set up a database or any interactivity on the webpage yet. Instructions for that will come later in the course!
+You do _not_ need to set up a database or any interactivity on the webpage yet. Instructions for that will come later in the course!
