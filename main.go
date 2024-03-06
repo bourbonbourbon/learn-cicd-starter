@@ -6,9 +6,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/url"
+	// "net/url"
 	"os"
-	"strings"
+	// "strings"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -35,8 +35,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		// log.Fatal("PORT environment variable is not set")
-		port = "80"
+		log.Fatal("PORT environment variable is not set")
 	}
 
 	apiCfg := apiConfig{}
@@ -46,10 +45,11 @@ func main() {
 		log.Println("DATABASE_URL environment variable is not set")
 		log.Println("Running without CRUD endpoints")
 	} else {
-		parsedURL, err := addParseTimeParam(dbURL)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// parsedURL, err := addParseTimeParam(dbURL)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		parsedURL := dbURL
 		db, err := sql.Open("mysql", parsedURL)
 		if err != nil {
 			log.Fatal(err)
@@ -104,19 +104,19 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func addParseTimeParam(input string) (string, error) {
-	const dummyScheme = "http://"
-	if !strings.Contains(input, dummyScheme) {
-		input = "http://" + input
-	}
-	u, err := url.Parse(input)
-	if err != nil {
-		return "", err
-	}
-	q := u.Query()
-	q.Add("parseTime", "true")
-	u.RawQuery = q.Encode()
-	returnUrl := u.String()
-	returnUrl = strings.TrimPrefix(returnUrl, dummyScheme)
-	return returnUrl, nil
-}
+// func addParseTimeParam(input string) (string, error) {
+// 	const dummyScheme = "http://"
+// 	if !strings.Contains(input, dummyScheme) {
+// 		input = "http://" + input
+// 	}
+// 	u, err := url.Parse(input)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	q := u.Query()
+// 	q.Add("parseTime", "true")
+// 	u.RawQuery = q.Encode()
+// 	returnUrl := u.String()
+// 	returnUrl = strings.TrimPrefix(returnUrl, dummyScheme)
+// 	return returnUrl, nil
+// }
